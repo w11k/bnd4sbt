@@ -8,31 +8,24 @@
 package com.weiglewilczek.bnd4sbt
 
 import aQute.lib.osgi.Builder
-import java.io.FileOutputStream
 import java.util.Properties
-import sbt.{ DefaultProject }
+import sbt.DefaultProject
 import scala.collection.Set
 
 trait BNDPlugin extends DefaultProject {
 
   /** Create an OSGi bundle out of this project by using BND. */
-  lazy val bndBundle = task {
-    val builder = new Builder
-    builder setProperties properties
-    builder setClasspath Array(bndClasspath.absolutePath)
-    val jar = builder.build
-    jar write bndOutput.absolutePath
-    log info "Created OSGi bundle at %s.".format(bndOutput)
-    None
-  }
-
-  /** Print help message for this plugin. */
-  lazy val bndHelp = task {
-    log info "BND plugin for SBT:"
-    log info "bnd-bundle - create an OSGi bundle out of this project by using BND"
-    log info "bnd-help   - display this message"
-    None
-  }
+  lazy val bndBundle =
+    task {
+      try {
+        createBundle()
+        log info "Created OSGi bundle at %s.".format(bndOutput)
+        None
+      } catch { case e =>
+        log error "Error when trying to create OSGi bundle: %s.".format(e.getMessage)
+        Some(e.getMessage)
+      }
+    } dependsOn test describedAs "Creates an OSGi bundle out of this project by using BND."
 
   /** The value for Bundle-SymbolicName. Defaults to projectOrganization.projectName. */
   protected def bndBundleSymbolicName = organization + "." + name
@@ -60,6 +53,14 @@ trait BNDPlugin extends DefaultProject {
 
   /** The fileName as part of BNDPlugin.bndOutput. Defaults to projectName-projectVersion.jar. */
   protected def bndFileName = "%s-%s.jar".format(name, version)
+
+  private def createBundle() {
+    val builder = new Builder
+    builder setProperties properties
+    builder setClasspath Array(bndClasspath.absolutePath)
+    val jar = builder.build
+    jar write bndOutput.absolutePath
+  }
 
   private def properties = {
     val properties = new Properties
