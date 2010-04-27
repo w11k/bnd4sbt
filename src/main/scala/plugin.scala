@@ -49,6 +49,9 @@ trait BNDPlugin extends DefaultProject {
   /** The value for Export-Package. Defaults to nothing being exported. */
   protected def bndExportPackage: Set[String] = Set.empty
 
+  /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
+  protected def bndImportPackage: Set[String] = Set("*")
+
   /** The classpath used by BND. Defaults to the mainCompilePath of this project. */
   protected def bndClasspath = mainCompilePath
 
@@ -65,6 +68,7 @@ trait BNDPlugin extends DefaultProject {
     properties.setProperty("Bundle-Name", bndBundleName)
     properties.setProperty("Private-Package", bndPrivatePackage mkString ",")
     properties.setProperty("Export-Package", bndExportPackage mkString ",")
+    properties.setProperty("Import-Package", bndImportPackage mkString ",")
     properties
   }
 }
