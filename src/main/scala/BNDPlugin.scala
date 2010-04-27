@@ -9,12 +9,11 @@ package com.weiglewilczek.bnd4sbt
 
 import aQute.lib.osgi.Builder
 import java.util.Properties
-import sbt.DefaultProject
-import scala.collection.Set
+import sbt.BasicScalaProject
 
-trait BNDPlugin extends DefaultProject {
+trait BNDPlugin extends BasicScalaProject with BNDPluginProperties {
 
-  /** Create an OSGi bundle out of this project by using BND. */
+  /** Creates an OSGi bundle out of this project by using BND. */
   lazy val bndBundle =
     task {
       try {
@@ -26,33 +25,6 @@ trait BNDPlugin extends DefaultProject {
         Some(e.getMessage)
       }
     } dependsOn test describedAs "Creates an OSGi bundle out of this project by using BND."
-
-  /** The value for Bundle-SymbolicName. Defaults to projectOrganization.projectName. */
-  protected def bndBundleSymbolicName = organization + "." + name
-
-  /** The value for Bundle-Name. Defaults to BNDPlugin.bndBundleSymbolicName. */
-  protected def bndBundleName = bndBundleSymbolicName
-
-  /** The value for Bundle-Version. Defaults to projectVersion . */
-  protected def bndBundleVersion = version.toString
-
-  /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
-  protected def bndPrivatePackage = Set("*")
-
-  /** The value for Export-Package. Defaults to nothing being exported. */
-  protected def bndExportPackage: Set[String] = Set.empty
-
-  /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
-  protected def bndImportPackage: Set[String] = Set("*")
-
-  /** The classpath used by BND. Defaults to the mainCompilePath of this project. */
-  protected def bndClasspath = mainCompilePath
-
-  /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. */
-  protected def bndOutput = outputPath / bndFileName
-
-  /** The fileName as part of BNDPlugin.bndOutput. Defaults to projectName-projectVersion.jar. */
-  protected def bndFileName = "%s-%s.jar".format(name, version)
 
   private def createBundle() {
     val builder = new Builder
