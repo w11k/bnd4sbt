@@ -57,5 +57,5 @@ private[bnd4sbt] trait BNDPluginProperties extends WithSBTProject {
 }
 
 private[bnd4sbt] trait WithSBTProject {
-  val project: MavenStyleScalaPaths
+  protected val project: MavenStyleScalaPaths
 }

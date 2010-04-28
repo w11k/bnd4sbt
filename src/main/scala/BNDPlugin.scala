@@ -9,9 +9,9 @@ package com.weiglewilczek.bnd4sbt
 
 import aQute.lib.osgi.Builder
 import java.util.Properties
-import sbt.BasicScalaProject
+import sbt.DefaultProject
 
-trait BNDPlugin extends BasicScalaProject with BNDPluginProperties {
+trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
   /** Creates an OSGi bundle out of this project by using BND. */
   lazy val bndBundle =
@@ -25,6 +25,8 @@ trait BNDPlugin extends BasicScalaProject with BNDPluginProperties {
         Some(e.getMessage)
       }
     } dependsOn test describedAs "Creates an OSGi bundle out of this project by using BND."
+
+  protected val project = this
 
   private def createBundle() {
     val builder = new Builder
