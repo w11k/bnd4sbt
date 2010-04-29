@@ -34,7 +34,7 @@ private[bnd4sbt] trait BNDPluginProperties extends WithSBTProject {
   /** The value for Bundle-Name. Defaults to BNDPlugin.bndBundleSymbolicName. */
   protected def bndBundleName = bndBundleSymbolicName
 
-  /** The value for Bundle-Version. Defaults to projectVersion . */
+  /** The value for Bundle-Version. Defaults to projectVersion. */
   protected def bndBundleVersion = project.version.toString
 
   /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
