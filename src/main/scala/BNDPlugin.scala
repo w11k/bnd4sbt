@@ -14,7 +14,9 @@ import sbt.DefaultProject
 trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
   /** Creates an OSGi bundle out of this project by using BND. */
-  lazy val bndBundle =
+  lazy val bndBundle = bndBundleAction
+
+  protected def bndBundleAction =
     task {
       try {
         createBundle()
@@ -24,9 +26,11 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
         log error "Error when trying to create OSGi bundle: %s.".format(e.getMessage)
         Some(e.getMessage)
       }
-    } dependsOn test describedAs "Creates an OSGi bundle out of this project by using BND."
+    } dependsOn compile describedAs "Creates an OSGi bundle out of this project by using BND."
 
   protected val project = this
+
+  override protected def packageAction = bndBundle
 
   private def createBundle() {
     val builder = new Builder
