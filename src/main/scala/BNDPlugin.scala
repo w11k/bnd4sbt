@@ -8,6 +8,7 @@
 package com.weiglewilczek.bnd4sbt
 
 import aQute.lib.osgi.Builder
+import aQute.lib.osgi.Constants._
 import java.util.Properties
 import sbt.DefaultProject
 
@@ -53,13 +54,13 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
   private def properties = {
     val properties = new Properties
-    properties.setProperty("Bundle-SymbolicName", bndBundleSymbolicName)
-    properties.setProperty("Bundle-Version", bndBundleVersion)
-    properties.setProperty("Bundle-Name", bndBundleName)
-    properties.setProperty("Private-Package", bndPrivatePackage mkString ",")
-    properties.setProperty("Export-Package", bndExportPackage mkString ",")
-    properties.setProperty("Import-Package", bndImportPackage mkString ",")
-    properties.setProperty("Include-Resource", bndIncludeResource mkString ",")
+    properties.setProperty(BUNDLE_SYMBOLICNAME, bndBundleSymbolicName)
+    properties.setProperty(BUNDLE_VERSION, bndBundleVersion)
+    properties.setProperty(BUNDLE_NAME, bndBundleName)
+    properties.setProperty(PRIVATE_PACKAGE, bndPrivatePackage mkString ",")
+    properties.setProperty(EXPORT_PACKAGE, bndExportPackage mkString ",")
+    properties.setProperty(IMPORT_PACKAGE, bndImportPackage mkString ",")
+    properties.setProperty(INCLUDE_RESOURCE, bndIncludeResource mkString ",")
     log debug "Using the following properties for BND: %s".format(properties)
     properties
   }
