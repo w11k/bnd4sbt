@@ -10,7 +10,10 @@ package com.weiglewilczek.bnd4sbt
 import sbt.MavenStyleScalaPaths
 import scala.collection.Set
 
-private[bnd4sbt] trait BNDPluginProperties extends WithSBTProject {
+/**
+ * Properties for BND with sensible defaults. 
+ */
+private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
 
   /**
    * The value for Bundle-SymbolicName. Defaults to projectOrganization.projectName with duplicate subsequences
@@ -41,10 +44,13 @@ private[bnd4sbt] trait BNDPluginProperties extends WithSBTProject {
   protected def bndPrivatePackage = Set("*")
 
   /** The value for Export-Package. Defaults to empty set, i.e. nothing is exported. */
-  protected def bndExportPackage: Set[String] = Set.empty
+  protected def bndExportPackage = Set[String]()
 
   /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
-  protected def bndImportPackage: Set[String] = Set("*")
+  protected def bndImportPackage = Set("*")
+
+  /** The value for Include-Resource. Defaults to the main resources. */
+  protected def bndIncludeResource: Set[String] = Set(project.mainResourcesPath.relativePath)
 
   /** The classpath used by BND. Defaults to the mainCompilePath of this project. */
   protected def bndClasspath = project.mainCompilePath
@@ -56,6 +62,11 @@ private[bnd4sbt] trait BNDPluginProperties extends WithSBTProject {
   protected def bndFileName = "%s-%s.jar".format(project.name, project.version)
 }
 
-private[bnd4sbt] trait WithSBTProject {
+/**
+ * Gives access to a SBT project.
+ */
+private[bnd4sbt] trait ProjectAccessor {
+
+  /** The SBT project. */
   protected val project: MavenStyleScalaPaths
 }
