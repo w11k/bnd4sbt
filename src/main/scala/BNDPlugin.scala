@@ -11,26 +11,37 @@ import aQute.lib.osgi.Builder
 import java.util.Properties
 import sbt.DefaultProject
 
+/**
+ * This BND plugin for SBT offers the following actions:
+ * <ul>
+ *   <li>bndBundle: Creates an OSGi bundle out of this project by using BND</li>
+ * </ul>
+ * Additionally the package action is overridden with the bndBundle action.
+ */
 trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
-  /** Creates an OSGi bundle out of this project by using BND. */
+  /** Creates an OSGi bundle out of this project by using BND. Initialized by bndBundleAction which can be overridden in order to modify the behavior. */
   lazy val bndBundle = bndBundleAction
 
+  /** Creates an OSGi bundle out of this project by using BND. Override to modify the behavior of the bndBundle action. */
   protected def bndBundleAction =
     task {
       try {
         createBundle()
         log info "Created OSGi bundle at %s.".format(bndOutput)
         None
-      } catch { case e =>
-        log error "Error when trying to create OSGi bundle: %s.".format(e.getMessage)
-        Some(e.getMessage)
+      } catch {
+        case e =>
+          log error "Error when trying to create OSGi bundle: %s.".format(e.getMessage)
+          Some(e.getMessage)
       }
     } dependsOn compile describedAs "Creates an OSGi bundle out of this project by using BND."
 
-  protected val project = this
-
+  /** Overrides the package action with the bndBundle action. */
   override protected def packageAction = bndBundle
+
+  /** This SBT project. */
+  override protected val project = this
 
   private def createBundle() {
     val builder = new Builder
@@ -48,6 +59,8 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
     properties.setProperty("Private-Package", bndPrivatePackage mkString ",")
     properties.setProperty("Export-Package", bndExportPackage mkString ",")
     properties.setProperty("Import-Package", bndImportPackage mkString ",")
+    properties.setProperty("Include-Resource", bndIncludeResource mkString ",")
+    log debug "Using the following properties for BND: %s".format(properties)
     properties
   }
 }
