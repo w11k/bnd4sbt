@@ -7,7 +7,7 @@
  */
 package com.weiglewilczek.bnd4sbt
 
-import sbt.MavenStyleScalaPaths
+import sbt.{ MavenStyleScalaPaths, Path }
 import scala.collection.Set
 
 /**
@@ -35,31 +35,34 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   }
 
   /** The value for Bundle-Name. Defaults to BNDPlugin.bndBundleSymbolicName. */
-  protected def bndBundleName = bndBundleSymbolicName
+  protected def bndBundleName: String = bndBundleSymbolicName
 
   /** The value for Bundle-Version. Defaults to projectVersion. */
-  protected def bndBundleVersion = project.version.toString
+  protected def bndBundleVersion: String = project.version.toString
 
   /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
-  protected def bndPrivatePackage = Set("*")
+  protected def bndPrivatePackage: Set[String] = Set("*")
 
   /** The value for Export-Package. Defaults to empty set, i.e. nothing is exported. */
-  protected def bndExportPackage = Set[String]()
+  protected def bndExportPackage: Set[String] = Set.empty
 
   /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
-  protected def bndImportPackage = Set("*")
+  protected def bndImportPackage: Set[String] = Set("*")
+
+  /** The value for Bundle-Activtor, wrapped in an Option. Defaults to None. */
+  protected def bndBundleActivator: Option[String] = None
 
   /** The value for Include-Resource. Defaults to the main resources. */
   protected def bndIncludeResource: Set[String] = Set(project.mainResourcesPath.relativePath)
 
   /** The classpath used by BND. Defaults to the mainCompilePath of this project. */
-  protected def bndClasspath = project.mainCompilePath
+  protected def bndClasspath: Path = project.mainCompilePath
 
   /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. */
-  protected def bndOutput = project.outputPath / bndFileName
+  protected def bndOutput: Path = project.outputPath / bndFileName
 
   /** The fileName as part of BNDPlugin.bndOutput. Defaults to projectName-projectVersion.jar. */
-  protected def bndFileName = "%s-%s.jar".format(project.name, project.version)
+  protected def bndFileName: String = "%s-%s.jar".format(project.name, project.version)
 }
 
 /**

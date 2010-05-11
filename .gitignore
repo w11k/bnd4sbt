@@ -23,3 +23,6 @@ target
 *.iml
 *.ipr
 *.iws
+
+# PAX
+runner
