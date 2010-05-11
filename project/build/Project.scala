@@ -2,7 +2,6 @@ import sbt._
 
 class Project(info: ProjectInfo) extends PluginProject(info) {
 
-  lazy val localMavenRepo = "Local Maven Repository" at "file://%s/.m2/repository".format(Path.userHome)
   lazy val aquteRepo      = "aQute Maven Repository" at "http://www.aqute.biz/repo"
 
   lazy val bnd     = "biz.aQute"               % "bndlib"      % "0.0.384"

@@ -60,6 +60,7 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
     properties.setProperty(PRIVATE_PACKAGE, bndPrivatePackage mkString ",")
     properties.setProperty(EXPORT_PACKAGE, bndExportPackage mkString ",")
     properties.setProperty(IMPORT_PACKAGE, bndImportPackage mkString ",")
+    for { activator <- bndBundleActivator } properties.setProperty(BUNDLE_ACTIVATOR, activator)
     properties.setProperty(INCLUDE_RESOURCE, bndIncludeResource mkString ",")
     log debug "Using the following properties for BND: %s".format(properties)
     properties
