@@ -1,0 +1,4 @@
+package d
+
+object Test
+

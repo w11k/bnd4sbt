@@ -61,7 +61,8 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
     properties.setProperty(EXPORT_PACKAGE, bndExportPackage mkString ",")
     properties.setProperty(IMPORT_PACKAGE, bndImportPackage mkString ",")
     for { activator <- bndBundleActivator } properties.setProperty(BUNDLE_ACTIVATOR, activator)
-    properties.setProperty(INCLUDE_RESOURCE, bndIncludeResource mkString ",")
+    properties.setProperty(BUNDLE_CLASSPATH, bundleClasspath mkString ",")
+    properties.setProperty(INCLUDE_RESOURCE, resourcesToBeIncluded mkString ",")
     log debug "Using the following properties for BND: %s".format(properties)
     properties
   }

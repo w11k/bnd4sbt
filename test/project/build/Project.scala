@@ -2,7 +2,7 @@ import com.weiglewilczek.bnd4sbt.BNDPlugin
 import sbt._
 
 class TestProject(info: ProjectInfo) extends ParentProject(info: ProjectInfo) {
-  
+
   lazy val a = project("a", "a", new A(_))
   class A(info: ProjectInfo) extends DefaultProject(info) with BNDPlugin {
     override def bndExportPackage = Set("a;version=1.0")
@@ -12,5 +12,18 @@ class TestProject(info: ProjectInfo) extends ParentProject(info: ProjectInfo) {
   class B(info: ProjectInfo) extends DefaultProject(info) with BNDPlugin {
     lazy val osgiCore = "org.osgi" % "org.osgi.core" % "4.2.0" % "provided"
     override def bndBundleActivator = Some("b.internal.Activator")
+  }
+
+  lazy val c = project("c", "c", new C(_))
+  class C(info: ProjectInfo) extends DefaultProject(info) {
+    lazy val commonsIO = "commons-io" % "commons-io" % "1.4"
+  }
+
+  lazy val d = project("d", "d", new D(_), c)
+  class D(info: ProjectInfo) extends DefaultProject(info) with BNDPlugin {
+    lazy val osgiCore = "org.osgi" % "org.osgi.core" % "4.2.0" % "provided"
+    lazy val commonsLogging = "commons-logging" % "commons-logging-api" % "1.1"
+    override def bndBundleActivator = Some("d.internal.Activator")
+    override def bndEmbedDependencies = true
   }
 }
