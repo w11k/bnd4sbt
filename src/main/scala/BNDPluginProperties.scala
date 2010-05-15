@@ -7,7 +7,7 @@
  */
 package com.weiglewilczek.bnd4sbt
 
-import sbt.{ DefaultProject, Path }
+import sbt.{ MavenStyleScalaPaths, DefaultProject, Path }
 import scala.collection.immutable.Set
 
 /**
@@ -53,7 +53,7 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   protected def bndBundleActivator: Option[String] = None
 
   /** The value for Include-Resource. Defaults to the main resources. */
-  protected def bndIncludeResource = Set(project.mainResourcesPath.relativePath)
+  protected def bndIncludeResource = Set(project.mainResourcesPath.absolutePath)
 
   /** Should the dependencies be embedded? Defaults to false. */
   protected def bndEmbedDependencies = false
@@ -68,14 +68,20 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   protected def bndClasspath = project.mainCompilePath
 
   private[bnd4sbt] def bundleClasspath =
-    if (bndEmbedDependencies) Set(".") ++ mapPublicClasspath { _.name }
+    if (bndEmbedDependencies) Set(".") ++ (project.publicClasspath.get filter { !_.isDirectory } map { _.name })
     else Set(".")
 
-  private[bnd4sbt] def resourcesToBeIncluded =
-    if (bndEmbedDependencies) bndIncludeResource ++ mapPublicClasspath { _.relativePath }
+  private[bnd4sbt] def resourcesToBeIncluded = {
+    val classpathResources = project.publicClasspath.get filter { _ != project.mainCompilePath } map { _.absolutePath }
+    val resourceResources = project.dependencies flatMap { 
+      _ match {
+        case d: MavenStyleScalaPaths => Some(d.mainResourcesPath.absolutePath)
+        case _ => None
+      }
+    }
+    if (bndEmbedDependencies) bndIncludeResource ++ classpathResources ++ resourceResources
     else bndIncludeResource
-
-  private def mapPublicClasspath[A](f: Path => A) = project.publicClasspath.get map f
+  }
 }
 
 /**
