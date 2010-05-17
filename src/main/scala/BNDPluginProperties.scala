@@ -7,7 +7,7 @@
  */
 package com.weiglewilczek.bnd4sbt
 
-import sbt.{ MavenStyleScalaPaths, DefaultProject, Path }
+import sbt.{ DefaultProject, MavenStyleScalaPaths }
 import scala.collection.immutable.Set
 
 /**
