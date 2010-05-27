@@ -2,7 +2,7 @@ import sbt._
 
 class Project(info: ProjectInfo) extends PluginProject(info) {
 
-  lazy val aquteRepo      = "aQute Maven Repository" at "http://www.aqute.biz/repo"
+  lazy val aquteRepo = "aQute Maven Repository" at "http://www.aqute.biz/repo"
 
   lazy val bnd     = "biz.aQute"               % "bndlib"      % "0.0.384"
   lazy val specs   = "org.scala-tools.testing" % "specs"       % "1.6.2.1" % "test"

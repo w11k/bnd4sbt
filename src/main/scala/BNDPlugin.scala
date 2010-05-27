@@ -47,7 +47,7 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
   private def createBundle() {
     val builder = new Builder
     builder setProperties properties
-    builder setClasspath Array(bndClasspath.absolutePath)
+    builder setClasspath bndClasspath.getFiles.toArray
     val jar = builder.build
     jar write bndOutput.absolutePath
   }
