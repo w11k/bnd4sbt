@@ -7,7 +7,7 @@
  */
 package com.weiglewilczek.bnd4sbt
 
-import sbt.{ DefaultProject, MavenStyleScalaPaths }
+import sbt.{ DefaultProject, MavenStyleScalaPaths, PathFinder }
 import scala.collection.immutable.Set
 
 /**
@@ -65,7 +65,7 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   protected def bndOutput = project.outputPath / bndFileName
 
   /** The classpath used by BND. Attention: Don't mistake this for the Bundle-Classpath! Defaults to the mainCompilePath of this project. */
-  protected def bndClasspath = project.mainCompilePath
+  protected def bndClasspath: PathFinder = project.mainCompilePath
 
   private[bnd4sbt] def bundleClasspath =
     if (bndEmbedDependencies) Set(".") ++ (project.publicClasspath.get filter { !_.isDirectory } map { _.name })
