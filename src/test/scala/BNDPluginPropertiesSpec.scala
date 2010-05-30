@@ -7,12 +7,12 @@
  */
 package com.weiglewilczek.bnd4sbt
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import org.specs.mock.Mockito
 import sbt.{ DefaultProject, Path => SbtPath }
 import scala.collection.immutable.Set
 
-class BNDPluginPropertiesSpec extends SpecificationWithJUnit with Mockito {
+class BNDPluginPropertiesSpec extends Specification with Mockito {
 
   "Calling bndBundleSymbolicName" should {
 
