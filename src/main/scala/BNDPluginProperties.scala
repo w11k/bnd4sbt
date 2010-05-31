@@ -49,7 +49,7 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
   protected def bndImportPackage = Set("*")
 
-  /** The value for Bundle-Activtor, wrapped in an Option. Defaults to None. */
+  /** The value for Bundle-Actiavtor, wrapped in an Option. Defaults to None. */
   protected def bndBundleActivator: Option[String] = None
 
   /** The value for Include-Resource. Defaults to the main resources. */
@@ -58,8 +58,8 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** Should the dependencies be embedded? Defaults to false. */
   protected def bndEmbedDependencies = false
 
-  /** The fileName as part of BNDPlugin.bndOutput. Defaults to projectName-projectVersion.jar. */
-  protected def bndFileName = "%s-%s.jar".format(project.name, project.version)
+  /** The fileName as part of BNDPlugin.bndOutput. Defaults to projectName_projectVersion.jar. */
+  protected def bndFileName = "%s_%s.jar".format(project.name, project.version)
 
   /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. */
   protected def bndOutput = project.outputPath / bndFileName
