@@ -51,10 +51,10 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The value for Bundle-RequiredExecutionEnvironment. Defaults to empty set, i.e. no execution environments are defined. */
   protected def bndBundleRequiredExecutionEnvironment = Set[ExecutionEnvironments.Value]()
 
-  /** The value for Bundle-Vendor, wrapped in an Option. Defaults to Some wrapping this project's organization. */
-  protected def bndBundleVendor: Option[String] = Some(project.organization)
+  /** The value for Bundle-Vendor, wrapped in an Option. Defaults to None, i.e. no vendor is defined. */
+  protected def bndBundleVendor: Option[String] = None
 
-  /** The value for Bundle-License, wrapped in an Option. Defaults to None. */
+  /** The value for Bundle-License, wrapped in an Option. Defaults to None, i.e. no license is defined. */
   protected def bndBundleLicense: Option[String] = None
 
   /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
@@ -69,7 +69,7 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The value for Dynamic-ImportPackage. Defaults to empty set, i.e. nothing is imported dynamically. */
   protected def bndDynamicImportPackage = Set[String]()
 
-  /** The value for Bundle-Actiavtor, wrapped in an Option. Defaults to None. */
+  /** The value for Bundle-Actiavtor, wrapped in an Option. Defaults to None, i.e. no activator is defined. */
   protected def bndBundleActivator: Option[String] = None
 
   /** The value for Include-Resource. Defaults to the main resources. */
