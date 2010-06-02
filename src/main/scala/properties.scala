@@ -11,6 +11,14 @@ import sbt.{ DefaultProject, MavenStyleScalaPaths, PathFinder }
 import scala.collection.immutable.Set
 
 /**
+ * Execution environments available for bnd4sbt. As Scala relies on Java 5, only Java 5 and later are supported.
+ */
+object ExecutionEnvironments extends Enumeration {
+  val Java5 = Value("J2SE-1.5")
+  val Java6 = Value("JavaSE-1.6")
+}
+
+/**
  * Properties for BND with sensible defaults. 
  */
 private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
@@ -37,8 +45,17 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The value for Bundle-Name. Defaults to BNDPlugin.bndBundleSymbolicName. */
   protected def bndBundleName: String = bndBundleSymbolicName
 
-  /** The value for Bundle-Version. Defaults to projectVersion. */
+  /** The value for Bundle-Version. Defaults to this project's version. */
   protected def bndBundleVersion = project.version.toString
+
+  /** The value for Bundle-RequiredExecutionEnvironment. Defaults to empty set, i.e. no execution environments are defined. */
+  protected def bndBundleRequiredExecutionEnvironment = Set[ExecutionEnvironments.Value]()
+
+  /** The value for Bundle-Vendor, wrapped in an Option. Defaults to Some wrapping this project's organization. */
+  protected def bndBundleVendor: Option[String] = Some(project.organization)
+
+  /** The value for Bundle-License, wrapped in an Option. Defaults to None. */
+  protected def bndBundleLicense: Option[String] = None
 
   /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
   protected def bndPrivatePackage = Set("*")
@@ -48,6 +65,9 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
 
   /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
   protected def bndImportPackage = Set("*")
+
+  /** The value for Dynamic-ImportPackage. Defaults to empty set, i.e. nothing is imported dynamically. */
+  protected def bndDynamicImportPackage = Set[String]()
 
   /** The value for Bundle-Actiavtor, wrapped in an Option. Defaults to None. */
   protected def bndBundleActivator: Option[String] = None

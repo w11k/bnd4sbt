@@ -5,7 +5,11 @@ class TestProject(info: ProjectInfo) extends ParentProject(info: ProjectInfo) {
 
   lazy val a = project("a", "a", new A(_))
   class A(info: ProjectInfo) extends DefaultProject(info) with BNDPlugin {
+    import com.weiglewilczek.bnd4sbt.ExecutionEnvironments._
+    override def bndBundleRequiredExecutionEnvironment = Set(Java5, Java6)
+    override def bndBundleLicense = "Eclipse Public License v1.0"
     override def bndExportPackage = Set("a;version=1.0")
+    override def bndDynamicImportPackage = Set("x.y.z")
   }
 
   lazy val b = project("b", "b", new B(_), a)
