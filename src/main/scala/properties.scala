@@ -84,8 +84,8 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** Should the nouses directive be applied? Defaults to false. */
   protected def bndNoUses = false
 
-  /** The fileName as part of BNDPlugin.bndOutput. Defaults to projectName_buildScalaVersion-projectVersion.jar. */
-  protected def bndFileName = "%s_%s-%s.jar".format(project.name, project.buildScalaVersion, project.version)
+  /** The fileName as part of BNDPlugin.bndOutput. Defaults to this project's defaultJarName. */
+  protected def bndFileName = project.defaultJarName
 
   /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. */
   protected def bndOutput = project.outputPath / bndFileName
