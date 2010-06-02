@@ -54,19 +54,23 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
   private def properties = {
     val properties = new Properties
+    // Manifest headers
     properties.setProperty(BUNDLE_SYMBOLICNAME, bndBundleSymbolicName)
     properties.setProperty(BUNDLE_VERSION, bndBundleVersion)
     properties.setProperty(BUNDLE_NAME, bndBundleName)
-    properties.setProperty(BUNDLE_REQUIREDEXECUTIONENVIRONMENT, bndBundleRequiredExecutionEnvironment mkString ",")
     for { v <- bndBundleVendor } properties.setProperty(BUNDLE_VENDOR, v)
     for { l  <- bndBundleLicense } properties.setProperty(BUNDLE_LICENSE, l)
+    properties.setProperty(BUNDLE_REQUIREDEXECUTIONENVIRONMENT, bndBundleRequiredExecutionEnvironment mkString ",")
+    properties.setProperty(BUNDLE_CLASSPATH, bundleClasspath mkString ",")
     properties.setProperty(PRIVATE_PACKAGE, bndPrivatePackage mkString ",")
     properties.setProperty(EXPORT_PACKAGE, bndExportPackage mkString ",")
     properties.setProperty(IMPORT_PACKAGE, bndImportPackage mkString ",")
     properties.setProperty(DYNAMICIMPORT_PACKAGE, bndDynamicImportPackage mkString ",")
     for { activator <- bndBundleActivator } properties.setProperty(BUNDLE_ACTIVATOR, activator)
-    properties.setProperty(BUNDLE_CLASSPATH, bundleClasspath mkString ",")
+    // Directives
     properties.setProperty(INCLUDE_RESOURCE, resourcesToBeIncluded mkString ",")
+    for { v <- bndVersionPolicy } properties.setProperty(VERSIONPOLICY, v)
+    if (bndNoUses) properties.setProperty(NOUSES, "true")
     log debug "Using the following properties for BND: %s".format(properties)
     properties
   }

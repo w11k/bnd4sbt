@@ -48,14 +48,14 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The value for Bundle-Version. Defaults to this project's version. */
   protected def bndBundleVersion = project.version.toString
 
-  /** The value for Bundle-RequiredExecutionEnvironment. Defaults to empty set, i.e. no execution environments are defined. */
-  protected def bndBundleRequiredExecutionEnvironment = Set[ExecutionEnvironments.Value]()
-
   /** The value for Bundle-Vendor, wrapped in an Option. Defaults to None, i.e. no vendor is defined. */
   protected def bndBundleVendor: Option[String] = None
 
   /** The value for Bundle-License, wrapped in an Option. Defaults to None, i.e. no license is defined. */
   protected def bndBundleLicense: Option[String] = None
+
+  /** The value for Bundle-RequiredExecutionEnvironment. Defaults to empty set, i.e. no execution environments are defined. */
+  protected def bndBundleRequiredExecutionEnvironment = Set[ExecutionEnvironments.Value]()
 
   /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
   protected def bndPrivatePackage = Set("*")
@@ -77,6 +77,12 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
 
   /** Should the dependencies be embedded? Defaults to false. */
   protected def bndEmbedDependencies = false
+
+  /** The value for the versionpolicy directive, wrapped in an Option. Defaults to None, i.e. no version policy is defined. */
+  protected def bndVersionPolicy: Option[String] = None
+
+  /** Should the nouses directive be applied? Defaults to false. */
+  protected def bndNoUses = false
 
   /** The fileName as part of BNDPlugin.bndOutput. Defaults to projectName_projectVersion.jar. */
   protected def bndFileName = "%s_%s.jar".format(project.name, project.version)
