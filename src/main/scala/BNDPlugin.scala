@@ -60,7 +60,7 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
     properties.setProperty(BUNDLE_NAME, bndBundleName)
     for { v <- bndBundleVendor } properties.setProperty(BUNDLE_VENDOR, v)
     for { l  <- bndBundleLicense } properties.setProperty(BUNDLE_LICENSE, l)
-    properties.setProperty(BUNDLE_REQUIREDEXECUTIONENVIRONMENT, bndBundleRequiredExecutionEnvironment mkString ",")
+    properties.setProperty(BUNDLE_REQUIREDEXECUTIONENVIRONMENT, bndExecutionEnvironment mkString ",")
     properties.setProperty(BUNDLE_CLASSPATH, bundleClasspath mkString ",")
     properties.setProperty(PRIVATE_PACKAGE, bndPrivatePackage mkString ",")
     properties.setProperty(EXPORT_PACKAGE, bndExportPackage mkString ",")

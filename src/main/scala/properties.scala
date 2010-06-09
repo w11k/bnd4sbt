@@ -55,7 +55,7 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   protected def bndBundleLicense: Option[String] = None
 
   /** The value for Bundle-RequiredExecutionEnvironment. Defaults to empty set, i.e. no execution environments are defined. */
-  protected def bndBundleRequiredExecutionEnvironment = Set[ExecutionEnvironments.Value]()
+  protected def bndExecutionEnvironment = Set[ExecutionEnvironments.Value]()
 
   /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
   protected def bndPrivatePackage = Set("*")
