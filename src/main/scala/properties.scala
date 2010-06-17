@@ -58,22 +58,22 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   protected def bndExecutionEnvironment = Set[ExecutionEnvironments.Value]()
 
   /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
-  protected def bndPrivatePackage = Set("*")
+  protected def bndPrivatePackage = Seq("*")
 
   /** The value for Export-Package. Defaults to empty set, i.e. nothing is exported. */
-  protected def bndExportPackage = Set[String]()
+  protected def bndExportPackage = Seq[String]()
 
   /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
-  protected def bndImportPackage = Set("*")
+  protected def bndImportPackage = Seq("*")
 
   /** The value for Dynamic-ImportPackage. Defaults to empty set, i.e. nothing is imported dynamically. */
-  protected def bndDynamicImportPackage = Set[String]()
+  protected def bndDynamicImportPackage = Seq[String]()
 
   /** The value for Bundle-Actiavtor, wrapped in an Option. Defaults to None, i.e. no activator is defined. */
   protected def bndBundleActivator: Option[String] = None
 
   /** The value for Include-Resource. Defaults to the main resources. */
-  protected def bndIncludeResource = Set(project.mainResourcesPath.absolutePath)
+  protected def bndIncludeResource = Seq(project.mainResourcesPath.absolutePath)
 
   /** Should the dependencies be embedded? Defaults to false. */
   protected def bndEmbedDependencies = false
