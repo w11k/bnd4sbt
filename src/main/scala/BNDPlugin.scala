@@ -54,6 +54,13 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
   private def properties = {
     val properties = new Properties
+
+    // SBT packageOptions/ManifestAttributes
+    for {
+      o <- packageOptions; if o.isInstanceOf[ManifestAttributes]
+      a <- o.asInstanceOf[ManifestAttributes].attributes
+    } properties.setProperty(a._1.toString, a._2)
+
     // Manifest headers
     properties.setProperty(BUNDLE_SYMBOLICNAME, bndBundleSymbolicName)
     properties.setProperty(BUNDLE_VERSION, bndBundleVersion)
@@ -67,10 +74,12 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
     properties.setProperty(IMPORT_PACKAGE, bndImportPackage mkString ",")
     properties.setProperty(DYNAMICIMPORT_PACKAGE, bndDynamicImportPackage mkString ",")
     for { activator <- bndBundleActivator } properties.setProperty(BUNDLE_ACTIVATOR, activator)
+
     // Directives
     properties.setProperty(INCLUDE_RESOURCE, resourcesToBeIncluded mkString ",")
     for { v <- bndVersionPolicy } properties.setProperty(VERSIONPOLICY, v)
     if (bndNoUses) properties.setProperty(NOUSES, "true")
+
     log debug "Using the following properties for BND: %s".format(properties)
     properties
   }

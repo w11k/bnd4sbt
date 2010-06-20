@@ -2,6 +2,9 @@ import sbt._
 
 class Project(info: ProjectInfo) extends PluginProject(info) {
 
+  // Compiler options
+  override def compileOptions = Unchecked :: Nil
+
   // Repositories
   def aquteRepo = "aQute Maven Repository" at "http://www.aqute.biz/repo"
   lazy val aquteModuleConfig = ModuleConfiguration("biz.aQute", aquteRepo)
