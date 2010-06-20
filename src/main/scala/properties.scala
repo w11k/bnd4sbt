@@ -60,13 +60,13 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
   protected def bndPrivatePackage = Seq("*")
 
-  /** The value for Export-Package. Defaults to empty set, i.e. nothing is exported. */
+  /** The value for Export-Package. Defaults to empty sequence, i.e. nothing is exported. */
   protected def bndExportPackage = Seq[String]()
 
   /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
   protected def bndImportPackage = Seq("*")
 
-  /** The value for Dynamic-ImportPackage. Defaults to empty set, i.e. nothing is imported dynamically. */
+  /** The value for Dynamic-ImportPackage. Defaults to empty sequence, i.e. nothing is imported dynamically. */
   protected def bndDynamicImportPackage = Seq[String]()
 
   /** The value for Bundle-Actiavtor, wrapped in an Option. Defaults to None, i.e. no activator is defined. */
@@ -84,10 +84,10 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** Should the nouses directive be applied? Defaults to false. */
   protected def bndNoUses = false
 
-  /** The fileName as part of BNDPlugin.bndOutput. Defaults to this project's defaultJarName. */
+  /** The fileName as part of BNDPlugin.bndOutput. Defaults to this project's defaultJarName. ATTENTION: Better not change this, but artifactBaseName! */
   protected def bndFileName = project.defaultJarName
 
-  /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. */
+  /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. ATTENTION: Better not change this, but the appropriate SBT default properties! */
   protected def bndOutput = project.outputPath / bndFileName
 
   /** The classpath used by BND. Attention: Don't mistake this for the Bundle-Classpath! Defaults to the mainCompilePath of this project. */
