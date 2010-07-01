@@ -73,6 +73,7 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
     properties.setProperty(EXPORT_PACKAGE, bndExportPackage mkString ",")
     properties.setProperty(IMPORT_PACKAGE, bndImportPackage mkString ",")
     properties.setProperty(DYNAMICIMPORT_PACKAGE, bndDynamicImportPackage mkString ",")
+    properties.setProperty(REQUIRE_BUNDLE, bndRequireBundle mkString ",")
     for { activator <- bndBundleActivator } properties.setProperty(BUNDLE_ACTIVATOR, activator)
 
     // Directives

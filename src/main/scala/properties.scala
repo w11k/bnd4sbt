@@ -69,6 +69,9 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The value for Dynamic-ImportPackage. Defaults to empty sequence, i.e. nothing is imported dynamically. */
   protected def bndDynamicImportPackage = Seq[String]()
 
+  /** The value for Require-Bundle. Defaults to empty sequence, i.e. no bundles are required. */
+  protected def bndRequireBundle = Seq[String]()
+
   /** The value for Bundle-Actiavtor, wrapped in an Option. Defaults to None, i.e. no activator is defined. */
   protected def bndBundleActivator: Option[String] = None
 
