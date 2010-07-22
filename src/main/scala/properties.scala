@@ -59,8 +59,8 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The value for Bundle-RequiredExecutionEnvironment. Defaults to empty set, i.e. no execution environments are defined. */
   protected def bndExecutionEnvironment = Set[ExecutionEnvironments]()
 
-  /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
-  protected def bndPrivatePackage = Seq("*")
+  /** The value for Private-Package. Defaults to BNDPlugin.bndBundleSymbolicName.*, i.e. contains the root package and all subpackages. */
+  protected def bndPrivatePackage = Seq(bndBundleSymbolicName + ".*")
 
   /** The value for Export-Package. Defaults to empty sequence, i.e. nothing is exported. */
   protected def bndExportPackage = Seq[String]()
@@ -95,8 +95,8 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. ATTENTION: Better not change this, but the appropriate SBT default properties! */
   protected def bndOutput = project.outputPath / bndFileName
 
-  /** The classpath used by BND. Attention: Don't mistake this for the Bundle-Classpath! Defaults to the mainCompilePath of this project. */
-  protected def bndClasspath: PathFinder = project.mainCompilePath
+  /** The classpath used by BND. Attention: Don't mistake this for the Bundle-Classpath! Defaults to the runClasspath of this project. */
+  protected def bndClasspath: PathFinder = project.runClasspath
 
   private[bnd4sbt] def bundleClasspath =
     if (bndEmbedDependencies) Set(".") ++ (project.publicClasspath.get filter { !_.isDirectory } map { _.name })
