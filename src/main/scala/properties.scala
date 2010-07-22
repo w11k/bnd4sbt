@@ -14,6 +14,7 @@ import scala.collection.immutable.Set
  * Execution environments available for bnd4sbt. As Scala relies on Java 5, only Java 5 and later are supported.
  */
 object ExecutionEnvironments extends Enumeration {
+	type ExecutionEnvironments = Value
   val Java5 = Value("J2SE-1.5")
   val Java6 = Value("JavaSE-1.6")
 }
@@ -22,6 +23,7 @@ object ExecutionEnvironments extends Enumeration {
  * Properties for BND with sensible defaults. 
  */
 private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
+  import ExecutionEnvironments._
 
   /**
    * The value for Bundle-SymbolicName. Defaults to projectOrganization.projectName with duplicate subsequences
@@ -55,10 +57,10 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   protected def bndBundleLicense: Option[String] = None
 
   /** The value for Bundle-RequiredExecutionEnvironment. Defaults to empty set, i.e. no execution environments are defined. */
-  protected def bndExecutionEnvironment = Set[ExecutionEnvironments.Value]()
+  protected def bndExecutionEnvironment = Set[ExecutionEnvironments]()
 
-  /** The value for Private-Package. Defaults to "*", i.e. contains everything. */
-  protected def bndPrivatePackage = Seq("*")
+  /** The value for Private-Package. Defaults to BNDPlugin.bndBundleSymbolicName.*, i.e. contains the root package and all subpackages. */
+  protected def bndPrivatePackage = Seq(bndBundleSymbolicName + ".*")
 
   /** The value for Export-Package. Defaults to empty sequence, i.e. nothing is exported. */
   protected def bndExportPackage = Seq[String]()
@@ -93,8 +95,8 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. ATTENTION: Better not change this, but the appropriate SBT default properties! */
   protected def bndOutput = project.outputPath / bndFileName
 
-  /** The classpath used by BND. Attention: Don't mistake this for the Bundle-Classpath! Defaults to the mainCompilePath of this project. */
-  protected def bndClasspath: PathFinder = project.mainCompilePath
+  /** The classpath used by BND. Attention: Don't mistake this for the Bundle-Classpath! Defaults to the runClasspath of this project. */
+  protected def bndClasspath: PathFinder = project.runClasspath
 
   private[bnd4sbt] def bundleClasspath =
     if (bndEmbedDependencies) Set(".") ++ (project.publicClasspath.get filter { !_.isDirectory } map { _.name })
@@ -119,5 +121,5 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
 private[bnd4sbt] trait ProjectAccessor {
 
   /** The SBT project. */
-  protected val project: DefaultProject
+  protected[bnd4sbt] val project: DefaultProject
 }

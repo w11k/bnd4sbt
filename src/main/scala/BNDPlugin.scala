@@ -22,9 +22,9 @@ import sbt.DefaultProject
 trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
   /** Creates an OSGi bundle out of this project by using BND. Initialized by bndBundleAction which can be overridden in order to modify the behavior. */
-  lazy val bndBundle = bndBundleAction
+  final lazy val bndBundle = bndBundleAction
 
-  /** Creates an OSGi bundle out of this project by using BND. Override to modify the behavior of the bndBundle action. */
+  /** Creates an OSGi bundle out of this project by using BND. Attention: If you override this, you might loose the bnd4sbt functionality. */
   protected def bndBundleAction =
     task {
       try {
@@ -38,18 +38,24 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
       }
     } dependsOn compile describedAs "Creates an OSGi bundle out of this project by using BND."
 
-  /** Overrides the package action with the bndBundle action. */
+  /** Overrides the package action with the bndBundle action. Attention: If you override this, you might loose the bnd4sbt functionality. */
   override protected def packageAction = bndBundle
 
   /** This SBT project. */
-  override protected val project = this
+  final override protected[bnd4sbt] val project = this
 
   private def createBundle() {
     val builder = new Builder
     builder setProperties properties
-    builder setClasspath bndClasspath.getFiles.toArray
+    builder setClasspath classpath
     val jar = builder.build
     jar write bndOutput.absolutePath
+  }
+
+  private def classpath = {
+    val cp = bndClasspath.getFiles.toArray
+    log debug "Using the following classpath for BND: %s".format(cp mkString ":")
+    cp
   }
 
   private def properties = {

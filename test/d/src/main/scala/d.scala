@@ -1,6 +1,6 @@
-package d.internal
+package com.weiglewilczek.bnd4sbttest.d.internal
 
-import c.C
+import com.weiglewilczek.bnd4sbttest.c.C
 import org.apache.commons.logging.LogFactory
 import org.osgi.framework.{ BundleActivator, BundleContext }
 

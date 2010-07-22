@@ -7,21 +7,21 @@ class TestProject(info: ProjectInfo) extends ParentProject(info: ProjectInfo) {
   class A(info: ProjectInfo) extends DefaultProject(info) with BNDPlugin {
     import com.weiglewilczek.bnd4sbt.ExecutionEnvironments._
     override def bndBundleLicense = Some("Eclipse Public License v1.0")
-    override def bndExportPackage = Seq("a;version=1.0")
+    override def bndExportPackage = Seq("com.weiglewilczek.bnd4sbttest.a;version=1.0")
     override def bndExecutionEnvironment = Set(Java5, Java6)
     override def bndDynamicImportPackage = Seq("x.y.z")
     override def bndVersionPolicy = Some("[$(@),$(@)]")
     override def bndNoUses = true
     override def packageOptions =
       ManifestAttributes("Bundle-Name" -> "ILLEGAL") ::
-      ManifestAttributes("test" -> "TEST") ::
+      ManifestAttributes("Test" -> "TEST") :: // Only uppercase headers are copied to the manifest by BND!
       Nil
   }
 
   lazy val b = project("b", "b", new B(_), a)
   class B(info: ProjectInfo) extends DefaultProject(info) with BNDPlugin {
     lazy val osgiCore = "org.osgi" % "org.osgi.core" % "4.2.0" % "provided"
-    override def bndBundleActivator = Some("b.internal.Activator")
+    override def bndBundleActivator = Some("com.weiglewilczek.bnd4sbttest.b.internal.Activator")
   }
 
   lazy val c = project("c", "c", new C(_))
@@ -33,7 +33,7 @@ class TestProject(info: ProjectInfo) extends ParentProject(info: ProjectInfo) {
   class D(info: ProjectInfo) extends DefaultProject(info) with BNDPlugin {
     lazy val osgiCore = "org.osgi" % "org.osgi.core" % "4.2.0" % "provided"
     lazy val commonsLogging = "commons-logging" % "commons-logging-api" % "1.1"
-    override def bndBundleActivator = Some("d.internal.Activator")
+    override def bndBundleActivator = Some("com.weiglewilczek.bnd4sbttest.d.internal.Activator")
     override def bndEmbedDependencies = true
   }
 }

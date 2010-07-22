@@ -1,6 +1,6 @@
-package b.internal
+package com.weiglewilczek.bnd4sbttest.b.internal
 
-import a.A
+import com.weiglewilczek.bnd4sbttest.a.A
 import org.osgi.framework.{ BundleActivator, BundleContext }
 
 class Activator extends BundleActivator {
