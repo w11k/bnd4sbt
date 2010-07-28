@@ -13,41 +13,51 @@ import java.util.Properties
 import sbt.DefaultProject
 
 /**
- * This BND plugin for SBT offers the following actions:
- * <ul>
- *   <li>bndBundle: Creates an OSGi bundle out of this project by using BND</li>
- * </ul>
- * Additionally the package action is overridden with the bndBundle action.
+ * <p>This plug-in for <a href="code.google.com/p/simple-build-tool">SBT</a> lets you create OSGi bundles
+ * from your SBT projects by employing <a href="www.aqute.biz/Code/Bnd">BND</a>.</p>
+ * <p>It offers the <code>bndBundle</code> action and overrides the <code>package</code> action.</p>
  */
 trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
-  /** Creates an OSGi bundle out of this project by using BND. Initialized by bndBundleAction which can be overridden in order to modify the behavior. */
+  /**
+   * Creates an OSGi bundle from this project by using BND.
+   * Initialized by <code>bndBundleAction</code> which could be overridden in order to modify the behavior.
+   */
   final lazy val bndBundle = bndBundleAction
 
-  /** Creates an OSGi bundle out of this project by using BND. Attention: If you override this, you might loose the bnd4sbt functionality. */
+  /**
+   * Creates an OSGi bundle from this project by using BND.
+   * <b>Attention</b>: If you override this, you might loose the desired functionality!
+   */
   protected def bndBundleAction =
     task {
       try {
         createBundle()
         log info "Created OSGi bundle at %s.".format(bndOutput)
         None
-      } catch {
+      }
+      catch {
         case e =>
           log error "Error when trying to create OSGi bundle: %s.".format(e.getMessage)
           Some(e.getMessage)
       }
     } dependsOn compile describedAs "Creates an OSGi bundle out of this project by using BND."
 
-  /** Overrides the package action with the bndBundle action. Attention: If you override this, you might loose the bnd4sbt functionality. */
+  /**
+   * Overrides the <code>package</code> action with the <code>bndBundle</code> action.
+   * <b>Attention</b>: If you override this, you might loose the desired functionality!
+   */
   override protected def packageAction = bndBundle
 
-  /** This SBT project. */
-  final override protected[bnd4sbt] val project = this
+  /**
+   * This SBT project.
+   */
+  override protected[bnd4sbt] final val project = this
 
   private def createBundle() {
     val builder = new Builder
-    builder setProperties properties
     builder setClasspath classpath
+    builder setProperties properties
     val jar = builder.build
     jar write bndOutput.absolutePath
   }
@@ -63,7 +73,7 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
 
     // SBT packageOptions/ManifestAttributes
     for {
-      o <- packageOptions; if o.isInstanceOf[ManifestAttributes]
+      o <- packageOptions if o.isInstanceOf[ManifestAttributes]
       a <- o.asInstanceOf[ManifestAttributes].attributes
     } properties.setProperty(a._1.toString, a._2)
 

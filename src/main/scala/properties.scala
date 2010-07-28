@@ -7,15 +7,28 @@
  */
 package com.weiglewilczek.bnd4sbt
 
-import sbt.{ DefaultProject, MavenStyleScalaPaths, PathFinder }
-import scala.collection.immutable.Set
+import sbt.{ DefaultProject, MavenStyleScalaPaths, Path, PathFinder}
+import sbt.Configurations._
 
 /**
  * Execution environments available for bnd4sbt. As Scala relies on Java 5, only Java 5 and later are supported.
  */
-object ExecutionEnvironments extends Enumeration {
-	type ExecutionEnvironments = Value
+object ExecutionEnvironment extends Enumeration {
+
+  /**
+   * Type alias for the enumeration values. Use <code>import ExecutionEnvironment._</code> to make the
+   * enumeration values available under type <code>ExecutionEnvironment</code>.
+   */
+	type ExecutionEnvironment = Value
+
+  /**
+   * Execution environment for Java 5.
+   */
   val Java5 = Value("J2SE-1.5")
+
+  /**
+   * Execution environment for Java 6.
+   */
   val Java6 = Value("JavaSE-1.6")
 }
 
@@ -23,11 +36,12 @@ object ExecutionEnvironments extends Enumeration {
  * Properties for BND with sensible defaults. 
  */
 private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
-  import ExecutionEnvironments._
+  import ExecutionEnvironment._
 
   /**
-   * The value for Bundle-SymbolicName. Defaults to projectOrganization.projectName with duplicate subsequences
-   * removed, e.g. "a.b.c" + "c-d" => "a.b.c.d". Recognized namespace separators are "." and "-".
+   * The value for <code>Bundle-SymbolicName</code>. Defaults to <i>projectOrganization.projectName</i>
+   * with duplicate subsequences removed, e.g. "a.b.c" + "c-d" => "a.b.c.d".
+   * Recognized namespace separators are "." and "-".
    */
   protected def bndBundleSymbolicName: String = {
     def split(s: String) = s split """\.|-""" match {
@@ -44,59 +58,110 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
     concat(name, Nil) mkString "."
   }
 
-  /** The value for Bundle-Name. Defaults to BNDPlugin.bndBundleSymbolicName. */
+  /**
+   * The value for <code>Bundle-Name</code>. Defaults to <code>bndBundleSymbolicName</code>.
+   */
   protected def bndBundleName: String = bndBundleSymbolicName
 
-  /** The value for Bundle-Version. Defaults to this project's version. */
-  protected def bndBundleVersion = project.version.toString
+  /**
+   * The value for <code>Bundle-Version</code>. Defaults to this project's version.
+   */
+  protected def bndBundleVersion: String = project.version.toString
 
-  /** The value for Bundle-Vendor, wrapped in an Option. Defaults to None, i.e. no vendor is defined. */
+  /**
+   * The value for <code>Bundle-Vendor</code>, wrapped in an <code>Option</code>. Defaults to <code>None</code>,
+   * i.e. no vendor is defined.
+   */
   protected def bndBundleVendor: Option[String] = None
 
-  /** The value for Bundle-License, wrapped in an Option. Defaults to None, i.e. no license is defined. */
+  /**
+   * The value for <code>Bundle-License</code>, wrapped in an <code>Option</code>. Defaults to <code>None</code>,
+   * i.e. no license is defined.
+   */
   protected def bndBundleLicense: Option[String] = None
 
-  /** The value for Bundle-RequiredExecutionEnvironment. Defaults to empty set, i.e. no execution environments are defined. */
-  protected def bndExecutionEnvironment = Set[ExecutionEnvironments]()
+  /**
+   * The value for <code>Bundle-RequiredExecutionEnvironment</code>. Defaults to empty <code>Set</code>,
+   * i.e. no execution environments are defined.
+   */
+  protected def bndExecutionEnvironment: Set[ExecutionEnvironment] = Set.empty
 
-  /** The value for Private-Package. Defaults to BNDPlugin.bndBundleSymbolicName.*, i.e. contains the root package and all subpackages. */
-  protected def bndPrivatePackage = Seq(bndBundleSymbolicName + ".*")
+  /**
+   * The value for <code>Private-Package</code>. Defaults to <code>"%s.*".format(bndBundleSymbolicName) :: Nil</code>,
+   * i.e. contains the root package and all subpackages of this project.
+   */
+  protected def bndPrivatePackage: Seq[String] = "%s.*".format(bndBundleSymbolicName) :: Nil
 
-  /** The value for Export-Package. Defaults to empty sequence, i.e. nothing is exported. */
-  protected def bndExportPackage = Seq[String]()
+  /**
+   * The value for <code>Export-Package</code>. Defaults to empty <code>Seq</code>, i.e. nothing is exported.
+   */
+  protected def bndExportPackage: Seq[String] = Nil
 
-  /** The value for Import-Package. Defaults to "*", i.e. everything is imported. */
-  protected def bndImportPackage = Seq("*")
+  /**
+   * The value for <code>Import-Package</code>. Defaults to
+   * <code>""scala.*;version=[%1$s,%1$s]".format(project.buildScalaVersion) ::  "*" :: Nil</code>,
+   * i.e. Scala is imported only in the exact version which is used to build this project.
+   */
+  protected def bndImportPackage: Seq[String] =
+    "scala.*;version=\"[%1$s,%1$s]\"".format(project.buildScalaVersion) ::  "*" :: Nil
 
-  /** The value for Dynamic-ImportPackage. Defaults to empty sequence, i.e. nothing is imported dynamically. */
-  protected def bndDynamicImportPackage = Seq[String]()
+  /**
+   * The value for <code>Dynamic-ImportPackage</code>. Defaults to empty <code>Seq</code>,
+   * i.e. nothing is imported dynamically.
+   */
+  protected def bndDynamicImportPackage: Seq[String] = Nil
 
-  /** The value for Require-Bundle. Defaults to empty sequence, i.e. no bundles are required. */
-  protected def bndRequireBundle = Seq[String]()
+  /**
+   * The value for <code>Require-Bundle</code>. Defaults to empty <code>Seq</code>, i.e. no bundles are required.
+   */
+  protected def bndRequireBundle: Seq[String] = Nil
 
-  /** The value for Bundle-Actiavtor, wrapped in an Option. Defaults to None, i.e. no activator is defined. */
+  /**
+   * The value for <code>Bundle-Actiavtor</code>, wrapped in an <code>Option</code>. Defaults to <code>None</code>,
+   * i.e. no activator is defined.
+   */
   protected def bndBundleActivator: Option[String] = None
 
-  /** The value for Include-Resource. Defaults to the main resources. */
-  protected def bndIncludeResource = Seq(project.mainResourcesPath.absolutePath)
+  /**
+   * The value for <code>Include-Resource</code>. Defaults to the main resources of this project.
+   */
+  protected def bndIncludeResource: Seq[String] = project.mainResourcesPath.absolutePath :: Nil
 
-  /** Should the dependencies be embedded? Defaults to false. */
+  /**
+   * Should the dependencies be embedded? Defaults to <code>false</code>.
+   */
   protected def bndEmbedDependencies = false
 
-  /** The value for the versionpolicy directive, wrapped in an Option. Defaults to None, i.e. no version policy is defined. */
+  /**
+   * The value for the <code>versionpolicy</code> directive, wrapped in an <code>Option</code>.
+   * Defaults to <code>None</code>, i.e. no version policy is defined.
+   */
   protected def bndVersionPolicy: Option[String] = None
 
-  /** Should the nouses directive be applied? Defaults to false. */
+  /**
+   * Should the <code>nouses</code> directive be applied? Defaults to <code>false</code>.
+   */
   protected def bndNoUses = false
 
-  /** The fileName as part of BNDPlugin.bndOutput. Defaults to this project's defaultJarName. ATTENTION: Better not change this, but artifactBaseName! */
-  protected def bndFileName = project.defaultJarName
+  /**
+   * The file name as part of <code>bndOutput</code>. Defaults to this project's <code>defaultJarName</code>.
+   * <b>Attention</b>: Better not change this, but the SBT default property <code>artifactBaseName</code>!
+   */
+  protected def bndFileName: String = project.defaultJarName
 
-  /** The output path used by BND. Defaults to the outputPath of this project plus the value of BNDPlugin.bndFileName. ATTENTION: Better not change this, but the appropriate SBT default properties! */
-  protected def bndOutput = project.outputPath / bndFileName
+  /**
+   * The output path used by BND. Defaults to the <code>outputPath</code> of this project plus the value of
+   * <code>bndFileName</code>.
+   * <b>Attention</b>: Better not change this, but the appropriate SBT default properties!
+   */
+  protected def bndOutput: Path = project.outputPath / bndFileName
 
-  /** The classpath used by BND. Attention: Don't mistake this for the Bundle-Classpath! Defaults to the runClasspath of this project. */
-  protected def bndClasspath: PathFinder = project.runClasspath
+  /**
+   * The classpath used by BND. Defaults to the <code>projectClasspath(Compile)</code> plus
+   * <code>providedClasspath</code> of this project.
+   * <b>Attention</b>: Don't mistake this for the Bundle-Classpath!
+   */
+  protected def bndClasspath: PathFinder = project.projectClasspath(Compile) +++ project.providedClasspath
 
   private[bnd4sbt] def bundleClasspath =
     if (bndEmbedDependencies) Set(".") ++ (project.publicClasspath.get filter { !_.isDirectory } map { _.name })
@@ -120,6 +185,8 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
  */
 private[bnd4sbt] trait ProjectAccessor {
 
-  /** The SBT project. */
+  /**
+   * The SBT project.
+   */
   protected[bnd4sbt] val project: DefaultProject
 }
