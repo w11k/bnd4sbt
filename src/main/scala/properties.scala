@@ -69,6 +69,12 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   protected def bndBundleVersion: String = project.version.toString
 
   /**
+   * The value for <code>Fragment-Host</code>, wrapped in an <code>Option</code>. Defaults to <code>None</code>,
+   * i.e. no fragment is defined.
+   */
+  protected def bndFragmentHost: Option[String] = None
+
+  /**
    * The value for <code>Bundle-Vendor</code>, wrapped in an <code>Option</code>. Defaults to <code>None</code>,
    * i.e. no vendor is defined.
    */
