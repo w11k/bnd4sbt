@@ -27,6 +27,7 @@ class TestProject(info: ProjectInfo) extends ParentProject(info: ProjectInfo) {
   class B(info: ProjectInfo) extends DefaultProject(info) with BNDPlugin {
     lazy val osgiCore = "org.osgi" % "org.osgi.core" % "4.2.0" % "provided"
     override def bndBundleActivator = Some("com.weiglewilczek.bnd4sbttest.b.internal.Activator")
+    override def bndFragmentHost = Some("x.y.z")
   }
 
   lazy val c = project("c", "c", new C(_))

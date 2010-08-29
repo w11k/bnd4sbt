@@ -54,35 +54,28 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
    */
   override protected[bnd4sbt] final val project = this
 
-  private def createBundle() {
-    val builder = new Builder
-    builder setClasspath classpath
-    builder setProperties properties
-    val jar = builder.build
-    jar write bndOutput.absolutePath
-  }
-
-  private def classpath = {
+  private lazy val classpath = {
     val cp = bndClasspath.getFiles.toArray
     log debug "Using the following classpath for BND: %s".format(cp mkString ":")
     cp
   }
 
-  private def properties = {
+  private lazy val properties = {
     val properties = new Properties
 
     // SBT packageOptions/ManifestAttributes
-    for {
-      o <- packageOptions if o.isInstanceOf[ManifestAttributes]
+    for (
+      o <- packageOptions if o.isInstanceOf[ManifestAttributes];
       a <- o.asInstanceOf[ManifestAttributes].attributes
-    } properties.setProperty(a._1.toString, a._2)
+    ) { properties.setProperty(a._1.toString, a._2) }
 
     // Manifest headers
     properties.setProperty(BUNDLE_SYMBOLICNAME, bndBundleSymbolicName)
     properties.setProperty(BUNDLE_VERSION, bndBundleVersion)
+    for ( f <- bndFragmentHost ) { properties.setProperty(FRAGMENT_HOST, f) }
     properties.setProperty(BUNDLE_NAME, bndBundleName)
-    for { v <- bndBundleVendor } properties.setProperty(BUNDLE_VENDOR, v)
-    for { l  <- bndBundleLicense } properties.setProperty(BUNDLE_LICENSE, l)
+    for ( v <- bndBundleVendor ) { properties.setProperty(BUNDLE_VENDOR, v) }
+    for ( l  <- bndBundleLicense ) { properties.setProperty(BUNDLE_LICENSE, l) }
     properties.setProperty(BUNDLE_REQUIREDEXECUTIONENVIRONMENT, bndExecutionEnvironment mkString ",")
     properties.setProperty(BUNDLE_CLASSPATH, bundleClasspath mkString ",")
     properties.setProperty(PRIVATE_PACKAGE, bndPrivatePackage mkString ",")
@@ -90,14 +83,22 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
     properties.setProperty(IMPORT_PACKAGE, bndImportPackage mkString ",")
     properties.setProperty(DYNAMICIMPORT_PACKAGE, bndDynamicImportPackage mkString ",")
     properties.setProperty(REQUIRE_BUNDLE, bndRequireBundle mkString ",")
-    for { activator <- bndBundleActivator } properties.setProperty(BUNDLE_ACTIVATOR, activator)
+    for ( activator <- bndBundleActivator ) { properties.setProperty(BUNDLE_ACTIVATOR, activator) }
 
     // Directives
     properties.setProperty(INCLUDE_RESOURCE, resourcesToBeIncluded mkString ",")
-    for { v <- bndVersionPolicy } properties.setProperty(VERSIONPOLICY, v)
+    for ( v <- bndVersionPolicy ) { properties.setProperty(VERSIONPOLICY, v) }
     if (bndNoUses) properties.setProperty(NOUSES, "true")
 
     log debug "Using the following properties for BND: %s".format(properties)
     properties
+  }
+
+  private def createBundle() {
+    val builder = new Builder
+    builder setClasspath classpath
+    builder setProperties properties
+    val jar = builder.build
+    jar write bndOutput.absolutePath
   }
 }
