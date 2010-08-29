@@ -4,7 +4,7 @@ bnd4sbt is open source software licensed under the "Eclipse Public License v1.0"
 
 h2. Getting bnd4sbt
 
-The latest releases of bnd4sbt are deployed to the Scala Tools repository":http://scala-tools.org/repo-releases. As this is available from every SBT project, you only have to add bnd4sbt as a plug-in to your project (see below).
+The latest releases of bnd4sbt are deployed to the "Scala-Tools.org Maven repository":http://scala-tools.org/repo-releases/com/weiglewilczek/bnd4sbt/. As this is available from every SBT project, you only have to add bnd4sbt as a plug-in to your project (see below).
 
 If you want to go for a nightly version, you can get it from here and build it yourself using SBT:
 
