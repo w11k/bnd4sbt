@@ -16,5 +16,5 @@ class Project(info: ProjectInfo) extends PluginProject(info) {
   // Publishing
   override def managedStyle = ManagedStyle.Maven
   val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
-  Credentials(Path.userHome / ".ivy2" / ".credentials" / ".scala-tools.org", log)
+  Credentials(Path.userHome / ".ivy2" / ".credentials", log)
 }
