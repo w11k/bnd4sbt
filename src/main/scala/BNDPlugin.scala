@@ -10,7 +10,7 @@ package com.weiglewilczek.bnd4sbt
 import aQute.lib.osgi.Builder
 import aQute.lib.osgi.Constants._
 import java.util.Properties
-import sbt.DefaultProject
+import sbt.{ DefaultProject, Path }
 
 /**
  * <p>This plug-in for <a href="code.google.com/p/simple-build-tool">SBT</a> lets you create OSGi bundles
@@ -26,22 +26,40 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
   final lazy val bndBundle = bndBundleAction
 
   /**
+   * Creates an OSGi bundle manifest for this project by using BND.
+   * Initialized by <code>bndManifestAction</code> which could be overridden in order to modify the behavior.
+   */
+  final lazy val bndManifest = bndManifestAction
+
+  /**
    * Creates an OSGi bundle from this project by using BND.
    * <b>Attention</b>: If you override this, you might loose the desired functionality!
    */
   protected def bndBundleAction =
     task {
-      try {
-        createBundle()
-        log info "Created OSGi bundle at %s.".format(bndOutput)
-        None
-      }
-      catch {
-        case e =>
-          log error "Error when trying to create OSGi bundle: %s.".format(e.getMessage)
-          Some(e.getMessage)
-      }
+      bndCreateAction("OSGi bundle", bndOutput, createBundle)
     } dependsOn compile describedAs "Creates an OSGi bundle out of this project by using BND."
+
+  /**
+   * Creates an OSGi bundle manifest for this project by using BND.
+   * <b>Attention</b>: If you override this, you might loose the desired functionality!
+   */
+  protected def bndManifestAction =
+    task {
+      bndCreateAction("OSGi bundle manifest", bndManifestOutput, createManifest)
+    } describedAs "Creates an OSGi bundle manifest from this project by using BND."
+
+  private def bndCreateAction(createdProductName: String, createdProductOutput: Path, createOperation: () => Unit) =
+    try {
+      createOperation()
+      log info "Created %s as %s.".format(createdProductName, createdProductOutput)
+      None
+    }
+    catch {
+      case e =>
+        log error "Error when trying to create %s: %s.".format(createdProductName, e.getMessage)
+        Some(e.getMessage)
+    }
 
   /**
    * Overrides the <code>package</code> action with the <code>bndBundle</code> action.
@@ -95,10 +113,29 @@ trait BNDPlugin extends DefaultProject with BNDPluginProperties {
   }
 
   private def createBundle() {
+    createJar write bndOutput.absolutePath
+  }
+
+  private def createManifest() {
+    import java.io._
+    import sbt.FileUtilities._
+
+    createDirectory(bndManifestOutput.asFile.getParentFile, project.log)
+    val out = new FileOutputStream(bndManifestOutput.absolutePath)
+    try {
+      createJar.getManifest write out
+    }
+    finally {
+      out.close()
+    }
+  }
+
+  private def createJar = {
     val builder = new Builder
     builder setClasspath classpath
     builder setProperties properties
-    val jar = builder.build
-    jar write bndOutput.absolutePath
+
+    builder.build
   }
 }
+

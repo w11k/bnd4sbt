@@ -163,6 +163,11 @@ private[bnd4sbt] trait BNDPluginProperties extends ProjectAccessor {
   protected def bndOutput: Path = project.outputPath / bndFileName
 
   /**
+   * The output path used by BND for the bundle manifest. Defaults to <code>"META-INF" / "MANIFEST.MF"</code>.
+   */
+  protected def bndManifestOutput: Path = project.path("META-INF") / "MANIFEST.MF"
+
+  /**
    * The classpath used by BND. Defaults to the <code>projectClasspath(Compile)</code> plus
    * <code>providedClasspath</code> of this project.
    * <b>Attention</b>: Don't mistake this for the Bundle-Classpath!
