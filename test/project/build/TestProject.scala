@@ -10,7 +10,7 @@ class TestProject(info: ProjectInfo) extends ParentProject(info: ProjectInfo) {
 
     lazy val specs = "org.scala-tools.testing" % "specs" % "1.6.2.1" % "test"
 
-    override def bndBundleLicense = Some("Eclipse Public License v1.0")
+    override def bndBundleLicense = Some("Apache 2.0 License")
     override def bndExportPackage = Seq("com.weiglewilczek.bnd4sbttest.a;version=\"1.0\"")
     override def bndExecutionEnvironment = Set(Java5, Java6)
     override def bndDynamicImportPackage = Seq("x.y.z")

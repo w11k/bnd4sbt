@@ -1,6 +1,6 @@
 bnd4sbt is a "BND":http://www.aqute.biz/Code/Bnd plug-in for "SBT":http://code.google.com/p/simple-build-tool: It enables you to create "OSGi":http://www.osgi.org bundles for your SBT projects.
 
-bnd4sbt is open source software licensed under the "Eclipse Public License v1.0":http://www.eclipse.org/legal/epl-v10.html. Just use it!
+bnd4sbt is open source software licensed under the "Apache 2.0 License":http://www.apache.org/licenses/LICENSE-2.0.html. Just use it!
 
 h2. Getting bnd4sbt
 
