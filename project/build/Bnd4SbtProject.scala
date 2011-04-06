@@ -3,11 +3,10 @@ import sbt._
 class Bnd4SbtProject(info: ProjectInfo) extends PluginProject(info) {
 
   // Module configurations
-  val aquteModuleConfig =
-    ModuleConfiguration("biz.aQute", "aQute Maven Repository" at "http://www.aqute.biz/repo")
+//  val aquteModuleConfig = ModuleConfiguration("biz.aQute", "aQute Maven Repository" at "http://www.aqute.biz/repo")
 
   // Dependencies (compile)
-  val bnd = "biz.aQute" % "bndlib" % "0.0.384"
+  val bnd = "biz.aQute" % "bndlib" % "1.43.0"
 
   // Dependencies (test)
   val specs = "org.scala-tools.testing" % "specs" % "1.6.2.1" % "test"
