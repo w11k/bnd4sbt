@@ -68,6 +68,7 @@ _bndRequireBundle_ : The value for <code>Require-Bundle</code>. Defaults to empt
 * _bndNoUses_: Should the <code>nouses</code> directive be applied? Defaults to <code>false</code>.
 * _bndFileName_: The file name as part of <code>bndOutput</code>. Defaults to this project's <code>defaultJarName</code>. <b>Attention</b>: Better not change this, but the SBT default property <code>artifactBaseName</code>!
 * _bndOutput_: The output path used by BND. Defaults to the <code>outputPath</code> of this project plus the value of <code>bndFileName</code>. <b>Attention</b>: Better not change this, but the appropriate SBT default properties!
+* _bndManifestOutput_: The output path used by BND for generating the manifest file. Defaults to <code>"META-INF" / "MANIFEST.MF"</code>.
 * _bndClasspath_: The classpath used by BND. Defaults to the <code>projectClasspath(Compile)</code> plus <code>providedClasspath</code> of this project. <b>Attention</b>: Don't mistake this for the Bundle-Classpath!
 
 In a very simple setup you will only change the packages to be exported, e.g.:
